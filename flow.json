@@ -1,0 +1,514 @@
+[
+    {
+        "id": "b6619cb2e9c270c5",
+        "type": "tab",
+        "label": "Flow 1",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "6f916c5f9ab70104",
+        "type": "tab",
+        "label": "Raspberry_Sensor",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "8b30eb615bd15a6b",
+        "type": "tab",
+        "label": "Raspberry_Sensor_AWS",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "c521b12473d57fe6",
+        "type": "mqtt-broker",
+        "name": "prueba_mqtt",
+        "broker": "localhost",
+        "port": "1883",
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willPayload": "",
+        "willMsg": {},
+        "sessionExpiry": ""
+    },
+    {
+        "id": "c50aafa319714601",
+        "type": "mqtt-broker",
+        "name": "",
+        "broker": "localhost",
+        "port": "1883",
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willPayload": "",
+        "willMsg": {},
+        "sessionExpiry": ""
+    },
+    {
+        "id": "48e8c2be4d654831",
+        "type": "inject",
+        "z": "b6619cb2e9c270c5",
+        "name": "Saludo",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 410,
+        "y": 200,
+        "wires": [
+            [
+                "fb9fe53e3b16e994"
+            ]
+        ]
+    },
+    {
+        "id": "fb9fe53e3b16e994",
+        "type": "debug",
+        "z": "b6619cb2e9c270c5",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 770,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "8a2d8d6c6c0d3964",
+        "type": "inject",
+        "z": "6f916c5f9ab70104",
+        "name": "Fake_Sensor",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "max",
+                "v": "100",
+                "vt": "str"
+            },
+            {
+                "p": "sensorid",
+                "v": "temp1",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": "1",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 110,
+        "y": 160,
+        "wires": [
+            [
+                "b18225d691fe162b"
+            ]
+        ]
+    },
+    {
+        "id": "b18225d691fe162b",
+        "type": "function",
+        "z": "6f916c5f9ab70104",
+        "name": "Aleatorio",
+        "func": "const randomValue={}\nrandomValue.sensorid=msg.sensorid;\nrandomValue.payload=Math.round(Math.random()*msg.max);\nrandomValue.timestamp=msg.payload;\nreturn randomValue;\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 340,
+        "y": 160,
+        "wires": [
+            [
+                "e914b39635494c9f"
+            ]
+        ]
+    },
+    {
+        "id": "d705f3bd7aac60c9",
+        "type": "debug",
+        "z": "6f916c5f9ab70104",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 910,
+        "y": 160,
+        "wires": []
+    },
+    {
+        "id": "e914b39635494c9f",
+        "type": "function",
+        "z": "6f916c5f9ab70104",
+        "name": "Azure_Message",
+        "func": "const dataMessage={\n    sensorid:msg.sensorid,\n    val:msg.payload,\n    timestamp:msg.timestamp};\nconst azureMessage={\n    \"deviceId\": \"raspberry_pi_1\",\n  \"key\": \"tuGOP3n0foZlBYmUIQqfKS3KCFvl3RwgtQxzi3oGvJM=\",\n  \"protocol\": \"mqtt\",\n  \"data\": dataMessage\n};\nconst message2send={};\nmessage2send.payload=azureMessage;\nreturn message2send;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 520,
+        "y": 160,
+        "wires": [
+            [
+                "5ffa8f27143f2fea",
+                "92c18e7ff8ec6ce2"
+            ]
+        ]
+    },
+    {
+        "id": "5ffa8f27143f2fea",
+        "type": "azureiothub",
+        "z": "6f916c5f9ab70104",
+        "name": "Azure IoT Hub",
+        "protocol": "mqtt",
+        "x": 740,
+        "y": 160,
+        "wires": [
+            [
+                "d705f3bd7aac60c9"
+            ]
+        ]
+    },
+    {
+        "id": "699006fce32d9b19",
+        "type": "inject",
+        "z": "6f916c5f9ab70104",
+        "name": "Fake_Sensor2",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "max",
+                "v": "100",
+                "vt": "str"
+            },
+            {
+                "p": "sensorid",
+                "v": "temp2",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": "1",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 120,
+        "y": 240,
+        "wires": [
+            [
+                "b18225d691fe162b"
+            ]
+        ]
+    },
+    {
+        "id": "92c18e7ff8ec6ce2",
+        "type": "debug",
+        "z": "6f916c5f9ab70104",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 670,
+        "y": 80,
+        "wires": []
+    },
+    {
+        "id": "9ce09eac6a6c20f6",
+        "type": "mqtt in",
+        "z": "6f916c5f9ab70104",
+        "name": "prueba_mqtt",
+        "topic": "esp32/temperatura",
+        "qos": "2",
+        "datatype": "auto",
+        "broker": "c50aafa319714601",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 190,
+        "y": 440,
+        "wires": [
+            [
+                "c6de801245f6f203"
+            ]
+        ]
+    },
+    {
+        "id": "c6de801245f6f203",
+        "type": "debug",
+        "z": "6f916c5f9ab70104",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 470,
+        "y": 440,
+        "wires": []
+    },
+    {
+        "id": "027a19e2d18ea9a0",
+        "type": "inject",
+        "z": "8b30eb615bd15a6b",
+        "name": "Fake_Sensor",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "max",
+                "v": "100",
+                "vt": "str"
+            },
+            {
+                "p": "sensorid",
+                "v": "temp1",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": "1",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 130,
+        "y": 160,
+        "wires": [
+            [
+                "d273519e40d5df5a"
+            ]
+        ]
+    },
+    {
+        "id": "d273519e40d5df5a",
+        "type": "function",
+        "z": "8b30eb615bd15a6b",
+        "name": "Aleatorio",
+        "func": "const randomValue={}\nrandomValue.sensorid=msg.sensorid;\nrandomValue.payload=Math.round(Math.random()*msg.max);\nrandomValue.timestamp=msg.payload;\nreturn randomValue;\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 360,
+        "y": 160,
+        "wires": [
+            [
+                "c014fbcc5c53a8f2"
+            ]
+        ]
+    },
+    {
+        "id": "95d074c8cce861d1",
+        "type": "debug",
+        "z": "8b30eb615bd15a6b",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 930,
+        "y": 160,
+        "wires": []
+    },
+    {
+        "id": "c014fbcc5c53a8f2",
+        "type": "function",
+        "z": "8b30eb615bd15a6b",
+        "name": "Azure_Message",
+        "func": "const dataMessage={\n    sensorid:msg.sensorid,\n    val:msg.payload,\n    timestamp:msg.timestamp};\nconst azureMessage={\n    \"deviceId\": \"raspberry_pi_1\",\n  \"key\": \"tuGOP3n0foZlBYmUIQqfKS3KCFvl3RwgtQxzi3oGvJM=\",\n  \"protocol\": \"mqtt\",\n  \"data\": dataMessage\n};\nconst message2send={};\nmessage2send.payload=azureMessage;\nreturn message2send;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 540,
+        "y": 160,
+        "wires": [
+            [
+                "e9c7cf51ac432f64",
+                "326022acf3639f6c"
+            ]
+        ]
+    },
+    {
+        "id": "e9c7cf51ac432f64",
+        "type": "azureiothub",
+        "z": "8b30eb615bd15a6b",
+        "name": "Azure IoT Hub",
+        "protocol": "mqtt",
+        "x": 760,
+        "y": 160,
+        "wires": [
+            [
+                "95d074c8cce861d1"
+            ]
+        ]
+    },
+    {
+        "id": "56554f671c1b41ef",
+        "type": "inject",
+        "z": "8b30eb615bd15a6b",
+        "name": "Fake_Sensor2",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "max",
+                "v": "100",
+                "vt": "str"
+            },
+            {
+                "p": "sensorid",
+                "v": "temp2",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": "1",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 140,
+        "y": 240,
+        "wires": [
+            [
+                "d273519e40d5df5a"
+            ]
+        ]
+    },
+    {
+        "id": "326022acf3639f6c",
+        "type": "debug",
+        "z": "8b30eb615bd15a6b",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 690,
+        "y": 80,
+        "wires": []
+    },
+    {
+        "id": "2739995c7d21f036",
+        "type": "mqtt in",
+        "z": "8b30eb615bd15a6b",
+        "name": "prueba_mqtt",
+        "topic": "esp32/temperatura",
+        "qos": "2",
+        "datatype": "auto",
+        "broker": "c50aafa319714601",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 210,
+        "y": 440,
+        "wires": [
+            [
+                "7e2a20b2c296877d"
+            ]
+        ]
+    },
+    {
+        "id": "7e2a20b2c296877d",
+        "type": "debug",
+        "z": "8b30eb615bd15a6b",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 490,
+        "y": 440,
+        "wires": []
+    }
+]

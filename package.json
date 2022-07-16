@@ -1,0 +1,12 @@
+{
+    "name": "MIOT04_2022",
+    "description": "Asignatura 04MIOT",
+    "version": "0.0.1",
+    "dependencies": {},
+    "node-red": {
+        "settings": {
+            "flowFile": "flow.json",
+            "credentialsFile": "flow_cred.json"
+        }
+    }
+}
